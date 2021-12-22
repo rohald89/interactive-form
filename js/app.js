@@ -1,5 +1,18 @@
+const nameField = document.querySelector('#name');
+const emailField = document.querySelector('#email');
+const creditCardField = document.querySelector('#cc-num');
+const zipField = document.querySelector('#zip');
+const ccvField = document.querySelector('#cvv');
+
+const nameTest = /^[a-zA-Z\s]+$/i;
+const emailTest = /^[^@]+@[^@.]+\.[a-z]+$/i;
+const creditCardTest = /^\d{13,16}$/;
+const zipTest = /^\d{5}$/;
+const ccvTest = /^\d{3}$/;
+
+
 // Set focus to the name field on page load
-document.querySelector('#name').focus();
+nameField.focus();
 
 // Make Other field visible if the user selects Other from the title dropdown
 document.querySelector('#title').addEventListener('change', (e) => {
@@ -72,3 +85,29 @@ document.querySelector('#payment').addEventListener('change', (e) => {
         }
     });
 });
+
+// Validate the form
+document.querySelector('form').addEventListener('submit', (e) => {
+    validate(nameField, nameTest);
+    validate(emailField, emailTest);
+    if(document.querySelector('#payment').value === 'credit-card') {
+        validate(creditCardField, creditCardTest);
+        validate(zipField, zipTest);
+        validate(ccvField, ccvTest);
+    }
+    if(document.querySelector('.not-valid').length > 0) {
+        e.preventDefault();
+    }
+});
+
+function validate(input, regex) {
+    if (regex.test(input.value)) {
+        input.parentElement.className = 'valid'; // Add icon to label
+        input.nextElementSibling.style.display = 'none'; // Hide error message
+        input.classList.remove('error'); // Remove error class from input
+    } else {
+        input.parentElement.className = 'not-valid';
+        input.nextElementSibling.style.display = 'block';
+        input.classList.add('error');
+    }
+};
