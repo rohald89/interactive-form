@@ -61,3 +61,14 @@ document.querySelectorAll('[type="checkbox"]').forEach(checkbox => {
     });
 });
 
+// Update payment section based on the selected payment method
+document.querySelector('#payment').addEventListener('change', (e) => {
+    const paymentOptions = document.querySelectorAll('#payment option');
+    paymentOptions.forEach(option => {
+        if (option.value === e.target.value) {
+            document.querySelector(`#${option.value}`).style.display = 'block';
+        } else {
+            document.querySelector(`#${option.value}`).style.display = 'none';
+        }
+    });
+});
