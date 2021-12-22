@@ -23,8 +23,8 @@ document.querySelector('#design').addEventListener('change', (e) => {
         document.querySelector('#color option').selected = true;
 });
 
-document.querySelector('.activities-box').addEventListener('change', () => {
-    // Calculate and update the total cost of the checked activities
+// Calculate and update the total cost of the checked activities
+document.querySelector('.activities-box').addEventListener('change', (e) => {
     const activities = document.querySelectorAll('[data-cost]');
     let total = 0;
     activities.forEach(activity => {
@@ -33,10 +33,22 @@ document.querySelector('.activities-box').addEventListener('change', () => {
         }
     });
     document.querySelector('#activities-cost').innerHTML = `Total: $${total}`;
+});
 
-    // TODO: Disable conflicting activities
-    const checkboxes = document.querySelectorAll('[data-day-and-time]');
-     
+// Disable conflicting activities
+const checkboxes = document.querySelectorAll('[data-day-and-time]');
+checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', (e) => {
+        const dayAndTime = checkbox.getAttribute('data-day-and-time');
+        const conflictingActivities = document.querySelectorAll(`[data-day-and-time="${dayAndTime}"]`);
+        conflictingActivities.forEach(conflictingActivity => {
+            if (e.target.checked && conflictingActivity !== e.target) {
+                conflictingActivity.disabled = true;
+            } else {
+                conflictingActivity.disabled = false;
+            }
+        });
+    });
 });
 
 // Make the activities section accessible to keyboard users by adding a visible focus state to the label
