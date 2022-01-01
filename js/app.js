@@ -46,6 +46,7 @@ document.querySelector('.activities-box').addEventListener('change', (e) => {
         }
     });
     document.querySelector('#activities-cost').innerHTML = `Total: $${total}`;
+    validateActivities()
 });
 
 // Disable conflicting activities
@@ -88,26 +89,41 @@ document.querySelector('#payment').addEventListener('change', (e) => {
 
 // Validate the form
 document.querySelector('form').addEventListener('submit', (e) => {
-    validate(nameField, nameTest);
-    validate(emailField, emailTest);
-    if(document.querySelector('#payment').value === 'credit-card') {
-        validate(creditCardField, creditCardTest);
-        validate(zipField, zipTest);
-        validate(ccvField, ccvTest);
-    }
-    if(document.querySelector('.not-valid').length > 0) {
+    validateInput(nameField, nameTest);
+    validateInput(emailField, emailTest);
+    validateActivities();
+    validateInput(creditCardField, creditCardTest);
+    validateInput(zipField, zipTest);
+    validateInput(ccvField, ccvTest);
+    if(document.querySelectorAll('.not-valid').length > 0) {
         e.preventDefault();
     }
 });
 
-function validate(input, regex) {
-    if (regex.test(input.value)) {
-        input.parentElement.className = 'valid'; // Add icon to label
+function validateInput(input, regex) {
+    console.log(input.closest('.credit-card'))
+    if(input.closest('.credit-card')?.style.display === 'none') {
+        input.classList.remove('error');
+        input.closest('.label').className = '';
+        input.nextElementSibling.style.display = 'none';
+    } else if (regex.test(input.value)) {
+        input.closest('label').className = 'valid'; // Add icon to label
         input.nextElementSibling.style.display = 'none'; // Hide error message
         input.classList.remove('error'); // Remove error class from input
     } else {
-        input.parentElement.className = 'not-valid';
+        input.closest('label').className = 'not-valid';
         input.nextElementSibling.style.display = 'block';
         input.classList.add('error');
     }
-};
+}
+
+function validateActivities() {
+    const activities = document.querySelectorAll('[type="checkbox"]:checked');
+    if(activities.length) {
+        document.querySelector('.activities').className = 'activities valid';
+        document.querySelector('.activities-hint').style.display = 'none';
+    } else {
+        document.querySelector('.activities').className = 'activities not-valid';
+        document.querySelector('.activities-hint').style.display = 'block';
+    }
+}
