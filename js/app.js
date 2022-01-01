@@ -69,9 +69,11 @@ checkboxes.forEach(checkbox => {
 document.querySelectorAll('[type="checkbox"]').forEach(checkbox => {
     checkbox.addEventListener('focus', (e) => {
         e.target.parentElement.classList.add('focus');
+        validateActivities();
     });
     checkbox.addEventListener('blur', (e) => {
         e.target.parentElement.classList.remove('focus');
+        validateActivities();
     });
 });
 
@@ -101,7 +103,6 @@ document.querySelector('form').addEventListener('submit', (e) => {
 });
 
 function validateInput(input, regex) {
-    console.log(input.closest('.credit-card'))
     if(input.closest('.credit-card')?.style.display === 'none') {
         input.classList.remove('error');
         input.closest('.label').className = '';
@@ -127,3 +128,19 @@ function validateActivities() {
         document.querySelector('.activities-hint').style.display = 'block';
     }
 }
+
+document.querySelectorAll('.error-border').forEach(border => {
+    border.addEventListener('keyup', (e) => {
+        if(e.target.id === 'name') {
+            validateInput(nameField, nameTest);
+        } else if (e.target.id === 'email') {
+            validateInput(emailField, emailTest);
+        } else if (e.target.id === 'cc-num') {
+            validateInput(creditCardField, creditCardTest);
+        } else if (e.target.id === 'zip') {
+            validateInput(zipField, zipTest);
+        } else if (e.target.id === 'cvv') {
+            validateInput(ccvField, ccvTest);
+        }
+    });
+});
